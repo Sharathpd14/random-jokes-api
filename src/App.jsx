@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 const API_URL = "https://api.freeapi.app/api/v1/public/randomjokes/joke/random";
 
@@ -34,69 +35,51 @@ export default function App() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-100 px-4 py-10">
-      <div className="mx-auto max-w-3xl">
-        <header className="mb-8 rounded-3xl bg-white p-6 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-600">
-            Random Jokes API
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-900">
-            Joke Viewer
-          </h1>
-          <p className="mt-2 text-slate-600">
-            Fetch a new joke whenever you want.
-          </p>
+    <main className="app-shell">
+      <div className="ambient ambient-a" />
+      <div className="ambient ambient-b" />
 
-          <button
-            onClick={fetchJoke}
-            className="mt-5 rounded-2xl bg-orange-600 px-5 py-3 font-semibold text-white hover:bg-orange-700"
-          >
-            New Joke
+      <section className="joke-card">
+        <header className="joke-header">
+          <p className="eyebrow">Random Jokes API</p>
+          <h1>Joke Viewer</h1>
+          <p className="subtitle">Fresh humor delivered in one click.</p>
+          <button type="button" onClick={fetchJoke} className="refresh-btn">
+            {loading ? "Fetching..." : "Get New Joke"}
           </button>
         </header>
 
         {loading && (
-          <div className="rounded-3xl bg-white p-8 text-center shadow-sm">
-            <p className="text-slate-600">Loading joke...</p>
+          <div className="state-card">
+            <div className="loader" />
+            <p>Loading your next joke...</p>
           </div>
         )}
 
-        {error && !loading && (
-          <div className="rounded-3xl bg-red-100 p-5 text-red-700">
-            {error}
-          </div>
-        )}
+        {error && !loading && <div className="state-card error-card">{error}</div>}
 
         {!loading && !error && joke && (
-          <section className="rounded-3xl bg-white p-8 shadow-lg">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-600">
-              Joke ID {joke.id}
-            </p>
+          <section className="joke-content">
+            <p className="joke-id">Joke ID {joke.id}</p>
+            <blockquote>"{joke.content}"</blockquote>
 
-            <blockquote className="mt-4 text-2xl font-bold leading-10 text-slate-900">
-              “{joke.content}”
-            </blockquote>
-
-            <div className="mt-6">
-              <p className="text-sm font-semibold text-slate-900">Categories</p>
-              <div className="mt-2 flex flex-wrap gap-2">
+            <div className="categories">
+              <p>Categories</p>
+              <div className="chips">
                 {joke.categories?.length > 0 ? (
                   joke.categories.map((cat, index) => (
-                    <span
-                      key={index}
-                      className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700"
-                    >
+                    <span key={index} className="chip">
                       {cat}
                     </span>
                   ))
                 ) : (
-                  <span className="text-sm text-slate-500">No categories</span>
+                  <span className="chip muted">No categories</span>
                 )}
               </div>
             </div>
           </section>
         )}
-      </div>
+      </section>
     </main>
   );
 }
